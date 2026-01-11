@@ -1,0 +1,14 @@
+# Word / Office temporary files
+~$*.docx       # Word auto-recovery files
+*.tmp          # Temporary files
+*.bak          # Backup files
+
+# PDF files (optional)
+*.pdf
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
