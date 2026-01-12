@@ -1116,118 +1116,333 @@
 
 ---
 
-## PHASE 7: DEPLOYMENT & LAUNCH (Week 17-18)
+## PHASE 7: VPS DEPLOYMENT & LAUNCH (Week 17-18)
 
-### 7.1 Cloud Infrastructure Setup
+### 7.1 VPS Server Setup
 
-- [ ] **Task 7.1.1**: Choose cloud provider
-  - Evaluate AWS, Google Cloud, Azure
-  - Set up cloud account
-  - Configure billing alerts
+- [ ] **Task 7.1.1**: Choose and provision VPS
+  - Select VPS provider (DigitalOcean, Linode, Vultr, Hetzner, etc.)
+  - Choose server specs (minimum: 8GB RAM, 4 vCPUs, 160GB SSD)
+  - Select Ubuntu 22.04 LTS as OS
+  - Set up SSH keys for secure access
+  - Configure firewall rules
 
-- [ ] **Task 7.1.2**: Set up production database
-  - Create PostgreSQL instance
-  - Configure backups
-  - Configure replication
-  - Run migrations
+- [ ] **Task 7.1.2**: Initial server configuration
+  - Update system packages: `sudo apt update && sudo apt upgrade -y`
+  - Create non-root user with sudo privileges
+  - Configure SSH (disable root login, change default port)
+  - Set up UFW firewall
+  - Install fail2ban for security
+  - Configure timezone and locale
 
-- [ ] **Task 7.1.3**: Set up Redis cache
-  - Create Redis instance
-  - Configure persistence
-  - Configure eviction policy
+- [ ] **Task 7.1.3**: Install Docker and Docker Compose
+  - Install Docker Engine
+  - Install Docker Compose
+  - Add user to docker group
+  - Configure Docker daemon
+  - Test Docker installation
 
-- [ ] **Task 7.1.4**: Set up Kubernetes cluster
-  - Create Kubernetes cluster
-  - Configure node pools
-  - Set up kubectl access
+- [ ] **Task 7.1.4**: Set up PostgreSQL on VPS
+  - Install PostgreSQL 15 via Docker
+  - Configure PostgreSQL for production
+  - Set strong passwords
+  - Configure pg_hba.conf for security
+  - Set up automated backups (daily)
+  - Configure backup retention (30 days)
+  - Run database migrations
+  - Create database users with proper permissions
 
-- [ ] **Task 7.1.5**: Set up load balancer
-  - Create load balancer
-  - Configure SSL/TLS certificates
-  - Configure health checks
+- [ ] **Task 7.1.5**: Set up Redis on VPS
+  - Install Redis via Docker
+  - Configure Redis for production
+  - Set password authentication
+  - Configure persistence (AOF + RDB)
+  - Configure eviction policy (allkeys-lru)
+  - Set maxmemory limit
 
-- [ ] **Task 7.1.6**: Set up WAF (Web Application Firewall)
-  - Create WAF
-  - Configure DDoS protection
-  - Configure rate limiting
-  - Configure SQL injection rules
+- [ ] **Task 7.1.6**: Install and configure Nginx
+  - Install Nginx
+  - Configure as reverse proxy
+  - Set up server blocks for each service
+  - Configure proxy headers
+  - Set up rate limiting
+  - Configure gzip compression
+  - Set up security headers
+
+- [ ] **Task 7.1.7**: Set up SSL/TLS certificates
+  - Install Certbot
+  - Obtain Let's Encrypt SSL certificates
+  - Configure auto-renewal
+  - Set up HTTPS redirects
+  - Configure SSL security settings (TLS 1.2+)
+  - Test SSL configuration (SSL Labs)
+
+- [ ] **Task 7.1.8**: Configure domain and DNS
+  - Point domain to VPS IP address
+  - Set up A records for main domain
+  - Set up A records for API subdomain (api.skillswapp.com)
+  - Set up A records for admin subdomain (admin.skillswapp.com)
+  - Configure CNAME records if needed
+  - Wait for DNS propagation
 
 ---
 
-### 7.2 Deployment
+### 7.2 Backend Deployment to VPS
 
-- [ ] **Task 7.2.1**: Deploy backend services
-  - Build Docker images
-  - Push to container registry
-  - Deploy to Kubernetes
+- [ ] **Task 7.2.1**: Prepare Docker images
+  - Create production Dockerfiles for each microservice
+  - Optimize Docker images (multi-stage builds)
+  - Build all Docker images locally
+  - Test images locally
+  - Tag images with version numbers
+
+- [ ] **Task 7.2.2**: Set up Docker registry (optional)
+  - Set up private Docker registry on VPS or use Docker Hub
+  - Push images to registry
+  - Configure authentication
+
+- [ ] **Task 7.2.3**: Create production docker-compose.yml
+  - Define all 12 microservices
+  - Configure PostgreSQL service
+  - Configure Redis service
+  - Set up service networking
   - Configure environment variables
-  - Test deployment
+  - Set up volumes for data persistence
+  - Configure restart policies
+  - Set resource limits (CPU, memory)
 
-- [ ] **Task 7.2.2**: Deploy admin web app
-  - Build production bundle
-  - Deploy to hosting (Vercel, Netlify, S3)
-  - Configure domain
-  - Test deployment
+- [ ] **Task 7.2.4**: Deploy backend services
+  - Transfer docker-compose.yml to VPS
+  - Create .env file with production credentials
+  - Pull/load Docker images on VPS
+  - Run `docker-compose up -d`
+  - Verify all services are running
+  - Check service logs for errors
+  - Test inter-service communication
 
-- [ ] **Task 7.2.3**: Deploy mobile app (iOS)
-  - Build iOS app
-  - Submit to App Store
-  - Wait for review
-  - Publish
+- [ ] **Task 7.2.5**: Configure Nginx for API Gateway
+  - Create Nginx config for API Gateway (port 8080)
+  - Set up upstream servers for load balancing
+  - Configure proxy_pass to API Gateway
+  - Set up WebSocket support for messaging service
+  - Configure request/response buffering
+  - Set up access logs and error logs
+  - Test Nginx configuration
+  - Reload Nginx
 
-- [ ] **Task 7.2.4**: Deploy mobile app (Android)
-  - Build Android app (APK/AAB)
-  - Submit to Google Play Store
-  - Wait for review
-  - Publish
+- [ ] **Task 7.2.6**: Set up environment variables
+  - Create secure .env files for each service
+  - Set database connection strings
+  - Set Redis connection strings
+  - Set JWT secrets
+  - Set API keys (Stripe, PayPal, OpenAI)
+  - Set OAuth credentials (Google, Facebook)
+  - Set email service credentials
+  - Set file storage credentials
+
+- [ ] **Task 7.2.7**: Run database migrations
+  - Connect to PostgreSQL container
+  - Run migration scripts
+  - Seed initial data (categories, admin user)
+  - Verify database schema
+  - Create database indexes
+  - Test database connectivity from services
+
+- [ ] **Task 7.2.8**: Configure file storage
+  - Set up local storage directory on VPS
+  - Or configure S3-compatible storage (MinIO, Wasabi, Backblaze B2)
+  - Set up proper permissions
+  - Configure upload limits
+  - Test file upload/download
 
 ---
 
-### 7.3 Monitoring & Logging
+### 7.3 Frontend Deployment
 
-- [ ] **Task 7.3.1**: Set up monitoring
-  - Configure Prometheus
-  - Set up Grafana dashboards
-  - Configure alerts (Slack, email)
+- [ ] **Task 7.3.1**: Build mobile apps for production
+  - Configure production API endpoints
+  - Update app version numbers
+  - Build Student App (Android APK/AAB)
+  - Build Student App (iOS IPA)
+  - Build Tutor App (Android APK/AAB)
+  - Build Tutor App (iOS IPA)
+  - Test production builds locally
 
-- [ ] **Task 7.3.2**: Set up logging
-  - Configure centralized logging (ELK Stack)
-  - Set up log retention policy
+- [ ] **Task 7.3.2**: Deploy to Google Play Store (Android)
+  - Create Google Play Developer account
+  - Create app listings for Student App
+  - Create app listings for Tutor App
+  - Upload APK/AAB files
+  - Fill in app details, screenshots, descriptions
+  - Set up pricing (free)
+  - Submit for review
+  - Wait for approval
+  - Publish apps
+
+- [ ] **Task 7.3.3**: Deploy to Apple App Store (iOS)
+  - Create Apple Developer account
+  - Create app IDs in App Store Connect
+  - Create app listings for Student App
+  - Create app listings for Tutor App
+  - Upload IPA files via Xcode/Transporter
+  - Fill in app details, screenshots, descriptions
+  - Submit for review
+  - Wait for approval
+  - Publish apps
+
+- [ ] **Task 7.3.4**: Deploy admin web panel (optional)
+  - Build admin panel for production
+  - Deploy to VPS (serve via Nginx)
+  - Or deploy to Vercel/Netlify
+  - Configure admin subdomain
+  - Set up authentication
+  - Test admin panel
+
+---
+
+### 7.4 VPS Security Hardening
+
+- [ ] **Task 7.4.1**: Configure firewall rules
+  - Allow SSH (custom port)
+  - Allow HTTP (80)
+  - Allow HTTPS (443)
+  - Block all other incoming ports
+  - Allow outgoing connections
+  - Test firewall rules
+
+- [ ] **Task 7.4.2**: Set up fail2ban
+  - Configure fail2ban for SSH
+  - Configure fail2ban for Nginx
+  - Set ban time and retry limits
+  - Test fail2ban rules
+
+- [ ] **Task 7.4.3**: Implement DDoS protection
+  - Configure Nginx rate limiting
+  - Set connection limits
+  - Configure request size limits
+  - Consider Cloudflare (free tier) for additional protection
+
+- [ ] **Task 7.4.4**: Set up automated security updates
+  - Configure unattended-upgrades
+  - Set up security update notifications
+  - Schedule regular security audits
+
+- [ ] **Task 7.4.5**: Implement backup strategy
+  - Set up automated database backups (daily)
+  - Set up automated file backups (weekly)
+  - Store backups off-server (S3, Backblaze B2)
+  - Test backup restoration
+  - Document backup procedures
+
+---
+
+### 7.5 Monitoring & Logging on VPS
+
+- [ ] **Task 7.5.1**: Set up monitoring with Prometheus & Grafana
+  - Install Prometheus via Docker
+  - Configure Prometheus to scrape metrics from services
+  - Install Grafana via Docker
+  - Connect Grafana to Prometheus
+  - Create dashboards for:
+    - System metrics (CPU, RAM, disk, network)
+    - Docker container metrics
+    - PostgreSQL metrics
+    - Redis metrics
+    - API response times
+    - Error rates
+  - Set up alerts (email, Slack)
+
+- [ ] **Task 7.5.2**: Set up centralized logging
+  - Install ELK Stack (Elasticsearch, Logstash, Kibana) via Docker
+  - Or use simpler alternative: Loki + Promtail + Grafana
+  - Configure log aggregation from all services
+  - Set up log retention policy (30 days)
   - Create log search dashboards
+  - Set up log-based alerts
 
-- [ ] **Task 7.3.3**: Set up error tracking
-  - Integrate Sentry (backend)
-  - Integrate Sentry (frontend)
+- [ ] **Task 7.5.3**: Set up error tracking
+  - Integrate Sentry for backend services
+  - Integrate Sentry for Flutter apps
   - Configure error notifications
+  - Set up error grouping
+  - Test error reporting
+
+- [ ] **Task 7.5.4**: Set up uptime monitoring
+  - Use UptimeRobot (free tier) or similar
+  - Monitor API endpoints
+  - Monitor website availability
+  - Set up downtime alerts (email, SMS)
+  - Configure status page (optional)
+
+- [ ] **Task 7.5.5**: Set up performance monitoring
+  - Install and configure New Relic or AppDynamics (free tier)
+  - Or use open-source alternative: Netdata
+  - Monitor API response times
+  - Monitor database query performance
+  - Set up performance alerts
+  - Create performance dashboards
 
 ---
 
-### 7.4 Launch Preparation
+### 7.6 Launch Preparation
 
-- [ ] **Task 7.4.1**: Create launch checklist
+- [ ] **Task 7.6.1**: Create launch checklist
   - Verify all features working
-  - Verify payment processing
+  - Verify payment processing (test mode first)
   - Verify email notifications
   - Verify push notifications
   - Verify admin panel
+  - Verify SSL certificates
+  - Verify backups are running
+  - Verify monitoring is active
 
-- [ ] **Task 7.4.2**: Prepare marketing materials
+- [ ] **Task 7.6.2**: Prepare marketing materials
   - Create landing page
   - Create demo video
-  - Create app screenshots
+  - Create app screenshots for stores
   - Write app store descriptions
+  - Prepare social media posts
+  - Create press release (optional)
 
-- [ ] **Task 7.4.3**: Beta testing
-  - Recruit beta testers
-  - Distribute beta app (TestFlight, Google Play Beta)
-  - Collect feedback
+- [ ] **Task 7.6.3**: Beta testing
+  - Recruit beta testers (20-50 users)
+  - Distribute beta app (TestFlight for iOS, Google Play Beta for Android)
+  - Collect feedback via forms
+  - Monitor for crashes and errors
   - Fix critical issues
+  - Iterate based on feedback
 
-- [ ] **Task 7.4.4**: Launch!
-  - Announce launch
-  - Monitor system health
+- [ ] **Task 7.6.4**: Performance testing
+  - Load test API endpoints (simulate 1000+ concurrent users)
+  - Stress test database
+  - Test file upload/download under load
+  - Optimize bottlenecks
+  - Verify auto-scaling (if configured)
+
+- [ ] **Task 7.6.5**: Security audit
+  - Run security scan (OWASP ZAP, Nmap)
+  - Check for common vulnerabilities
+  - Verify SSL/TLS configuration
+  - Test authentication and authorization
+  - Review and rotate all secrets/API keys
+  - Fix any security issues
+
+- [ ] **Task 7.6.6**: Documentation
+  - Create API documentation (Swagger/OpenAPI)
+  - Create deployment documentation
+  - Create troubleshooting guide
+  - Create user guides (for students and tutors)
+  - Document backup/restore procedures
+  - Document scaling procedures
+
+- [ ] **Task 7.6.7**: Launch!
+  - Switch payment gateway to live mode
+  - Announce launch on social media
+  - Submit apps to stores (if not already done)
+  - Monitor system health closely
   - Respond to user feedback
-  - Fix urgent issues
+  - Fix urgent issues immediately
+  - Celebrate! 🎉
 
 ---
 
