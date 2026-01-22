@@ -1,0 +1,67 @@
+name: skillswapp_backend
+description: SkillSwapp Backend - Dart Shelf Microservices Monorepo
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  # HTTP Server & Routing
+  shelf: ^1.4.0
+  shelf_router: ^1.1.0
+  shelf_cors_headers: ^0.1.5
+  shelf_web_socket: ^1.0.4
+  
+  # Database
+  postgres: ^3.0.0
+  
+  # Authentication & Security
+  dart_jsonwebtoken: ^2.12.0
+  crypto: ^3.0.3
+  bcrypt: ^1.1.3
+  
+  # OAuth
+  googleapis_auth: ^1.4.1
+  
+  # HTTP Client (for service-to-service communication)
+  http: ^1.1.0
+  dio: ^5.4.0
+  
+  # Email
+  mailer: ^6.0.1
+  
+  # File Upload & Storage
+  mime: ^1.0.4
+  
+  # PDF Generation (for certificates)
+  pdf: ^3.10.7
+  
+  # QR Code Generation
+  qr: ^3.0.1
+  
+  # JSON Serialization
+  json_annotation: ^4.8.1
+  
+  # Utilities
+  dotenv: ^4.2.0
+  logger: ^2.0.2
+  uuid: ^4.2.0
+  intl: ^0.18.1
+  skillswapp_shared:
+    path: shared
+  
+  # Redis (optional, for caching)
+  # redis: ^4.0.0  # Commented out - add when needed
+
+dev_dependencies:
+  # Testing
+  test: ^1.24.0
+  mockito: ^5.4.4
+  
+  # Code Generation
+  build_runner: ^2.4.7
+  json_serializable: ^6.7.1
+  
+  # Linting
+  lints: ^3.0.0

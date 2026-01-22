@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "SkillSwapp",
+    "slug": "skillswapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/skillswap_logo.png",
+    "scheme": "skillswapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "splash": {
+      "image": "./assets/images/skillswap_logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.skillswapp.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/skillswap_logo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.skillswapp.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/skillswap_logo.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2055743a-84b9-43dc-8679-c9a0b32dae6d"
+      }
+    }
+  }
+}

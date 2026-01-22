@@ -1,0 +1,312 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: skillswapp_postgres
+    environment:
+      POSTGRES_DB: skillswapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/seeds:/docker-entrypoint-initdb.d/seeds
+    networks:
+      - skillswapp_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API Gateway - Port 8080
+  api_gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: api_gateway
+        PORT: 8080
+    container_name: skillswapp_api_gateway
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+      JWT_SECRET: ${JWT_SECRET:-your_secret_key_change_in_production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Auth Service - Port 8081
+  auth_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: auth_service
+        PORT: 8081
+    container_name: skillswapp_auth_service
+    ports:
+      - "8081:8081"
+    environment:
+      PORT: 8081
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+      JWT_SECRET: ${JWT_SECRET:-your_secret_key_change_in_production}
+      JWT_EXPIRY: 3600
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # User Service - Port 8082
+  user_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: user_service
+        PORT: 8082
+    container_name: skillswapp_user_service
+    ports:
+      - "8082:8082"
+    environment:
+      PORT: 8082
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Course Service - Port 8083
+  course_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: course_service
+        PORT: 8083
+    container_name: skillswapp_course_service
+    ports:
+      - "8083:8083"
+    environment:
+      PORT: 8083
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Verification Service - Port 8084
+  verification_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: verification_service
+        PORT: 8084
+    container_name: skillswapp_verification_service
+    ports:
+      - "8084:8084"
+    environment:
+      PORT: 8084
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+      AI_API_KEY: ${AI_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Learning Service - Port 8085
+  learning_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: learning_service
+        PORT: 8085
+    container_name: skillswapp_learning_service
+    ports:
+      - "8085:8085"
+    environment:
+      PORT: 8085
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Payment Service - Port 8086
+  payment_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: payment_service
+        PORT: 8086
+    container_name: skillswapp_payment_service
+    ports:
+      - "8086:8086"
+    environment:
+      PORT: 8086
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Messaging Service - Port 8087
+  messaging_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: messaging_service
+        PORT: 8087
+    container_name: skillswapp_messaging_service
+    ports:
+      - "8087:8087"
+    environment:
+      PORT: 8087
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Review Service - Port 8088
+  review_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: review_service
+        PORT: 8088
+    container_name: skillswapp_review_service
+    ports:
+      - "8088:8088"
+    environment:
+      PORT: 8088
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Certificate Service - Port 8089
+  certificate_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: certificate_service
+        PORT: 8089
+    container_name: skillswapp_certificate_service
+    ports:
+      - "8089:8089"
+    environment:
+      PORT: 8089
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Admin Service - Port 8090
+  admin_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: admin_service
+        PORT: 8090
+    container_name: skillswapp_admin_service
+    ports:
+      - "8090:8090"
+    environment:
+      PORT: 8090
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+networks:
+  skillswapp_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
