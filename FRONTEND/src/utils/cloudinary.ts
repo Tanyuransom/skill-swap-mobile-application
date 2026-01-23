@@ -10,6 +10,21 @@ export const CLOUDINARY_CONFIG = {
     uploadPreset: 'skillswapp_reels', // Create this in Cloudinary settings
 };
 
+interface CloudinaryVideoResponse {
+    secure_url: string;
+    duration?: number;
+    error?: {
+        message: string;
+    };
+}
+
+interface CloudinaryImageResponse {
+    secure_url: string;
+    error?: {
+        message: string;
+    };
+}
+
 /**
  * Upload video to Cloudinary
  */
@@ -35,14 +50,14 @@ export async function uploadVideoToCloudinary(videoUri: string): Promise<{
             `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/video/upload`,
             {
                 method: 'POST',
-                body: formData,
+                body: formData as any,
                 headers: {
                     'Accept': 'application/json',
                 },
             }
         );
 
-        const data = await response.json();
+        const data = await response.json() as CloudinaryVideoResponse;
 
         if (!data.secure_url) {
             throw new Error('Upload failed: ' + (data.error?.message || 'Unknown error'));
@@ -79,11 +94,11 @@ export async function uploadImageToCloudinary(imageUri: string): Promise<string>
             `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`,
             {
                 method: 'POST',
-                body: formData,
+                body: formData as any,
             }
         );
 
-        const data = await response.json();
+        const data = await response.json() as CloudinaryImageResponse;
 
         if (!data.secure_url) {
             throw new Error('Upload failed');
