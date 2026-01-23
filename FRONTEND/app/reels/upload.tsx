@@ -95,7 +95,7 @@ export default function UploadReelScreen() {
                 }
             );
 
-            const data = await response.json();
+            const data: any = await response.json();
 
             if (data.secure_url) {
                 return data.secure_url;
