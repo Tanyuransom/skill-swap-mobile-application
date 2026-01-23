@@ -1,16 +1,15 @@
 /**
  * Bottom Navigation Layout (Tabs)
  * 
- * Instagram-style 5-tab navigation with micro-dot indicator
- * Translated from Flutter bottom_navigation.dart
- * Following Bottom Nav Constitution (27 Rules)
+ * SkillSwapp Navigation - Modern 5-tab layout
+ * Optimized for skill-sharing platform
  */
 
 import { Tabs } from 'expo-router';
 import { useColorScheme, Platform } from 'react-native';
-import { House, VideoCamera, Compass, ChatCircle, User } from 'phosphor-react-native';
-import { AppColors } from '@/theme/colors';
-import { typography } from '@/theme/typography';
+import { House, BookOpen, GraduationCap, ChatCircle, User } from 'phosphor-react-native';
+import { AppColors } from '../../src/theme/colors';
+import { typography } from '../../src/theme/typography';
 
 export default function TabsLayout() {
     const colorScheme = useColorScheme();
@@ -32,16 +31,17 @@ export default function TabsLayout() {
                     height: Platform.OS === 'ios' ? 88 : 60,
                     paddingBottom: Platform.OS === 'ios' ? 28 : 8,
                     paddingTop: 8,
-                    elevation: 0,
+                    elevation: 8,
                     shadowColor: '#000',
-                    shadowOffset: { width: 0, height: -8 },
-                    shadowOpacity: isDark ? 0.3 : 0.06,
-                    shadowRadius: 24,
+                    shadowOffset: { width: 0, height: -4 },
+                    shadowOpacity: isDark ? 0.3 : 0.08,
+                    shadowRadius: 16,
                 },
                 tabBarLabelStyle: {
                     ...typography.caption,
                     fontSize: 11,
                     fontWeight: '600',
+                    letterSpacing: 0.3,
                 },
                 tabBarIconStyle: {
                     marginBottom: 2,
@@ -51,10 +51,10 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="feed"
                 options={{
-                    title: 'Feed',
+                    title: 'Home',
                     tabBarIcon: ({ color, focused }) => (
                         <House
-                            size={focused ? 24 : 22}
+                            size={focused ? 26 : 24}
                             color={color}
                             weight={focused ? 'fill' : 'regular'}
                         />
@@ -62,12 +62,12 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="reels"
+                name="courses"
                 options={{
-                    title: 'Reels',
+                    title: 'Courses',
                     tabBarIcon: ({ color, focused }) => (
-                        <VideoCamera
-                            size={focused ? 24 : 22}
+                        <BookOpen
+                            size={focused ? 26 : 24}
                             color={color}
                             weight={focused ? 'fill' : 'regular'}
                         />
@@ -75,12 +75,12 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="explore"
+                name="learning"
                 options={{
-                    title: 'Explore',
+                    title: 'Learning',
                     tabBarIcon: ({ color, focused }) => (
-                        <Compass
-                            size={focused ? 24 : 22}
+                        <GraduationCap
+                            size={focused ? 26 : 24}
                             color={color}
                             weight={focused ? 'fill' : 'regular'}
                         />
@@ -93,7 +93,7 @@ export default function TabsLayout() {
                     title: 'Messages',
                     tabBarIcon: ({ color, focused }) => (
                         <ChatCircle
-                            size={focused ? 24 : 22}
+                            size={focused ? 26 : 24}
                             color={color}
                             weight={focused ? 'fill' : 'regular'}
                         />
@@ -106,7 +106,7 @@ export default function TabsLayout() {
                     title: 'Profile',
                     tabBarIcon: ({ color, focused }) => (
                         <User
-                            size={focused ? 24 : 22}
+                            size={focused ? 26 : 24}
                             color={color}
                             weight={focused ? 'fill' : 'regular'}
                         />
@@ -116,3 +116,4 @@ export default function TabsLayout() {
         </Tabs>
     );
 }
+
