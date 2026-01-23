@@ -23,7 +23,7 @@ import { spacing } from '../../src/theme/spacing';
 import { radius } from '../../src/theme/radius';
 import { paymentService } from '../../src/services/payment.service';
 
-type PaymentMethod = 'orange_money' | 'mtn_momo';
+import { camPayService } from '../../src/services/campay.service';
 
 export default function PaymentScreen() {
     const colorScheme = useColorScheme();
@@ -49,19 +49,29 @@ export default function PaymentScreen() {
 
         try {
             setProcessing(true);
-            const transaction = await paymentService.initiatePayment({
-                amount: subscriptionPrice,
-                paymentMethod: selectedMethod,
-                phoneNumber: phoneNumber.trim(),
-            });
+
+            // Use CamPay for real payment processing
+            const response = await camPayService.initiatePayment(
+                subscriptionPrice,
+                phoneNumber.trim(),
+                'SkillSwapp Monthly Subscription'
+            );
 
             Alert.alert(
                 'Payment Initiated',
-                `Please check your phone and enter your ${selectedMethod === 'orange_money' ? 'Orange Money' : 'MTN Mobile Money'} PIN to complete the payment.`,
+                `Please dial ${response.ussdCode} on your phone to complete the payment.`,
                 [
                     {
                         text: 'OK',
-                        onPress: () => router.push('/(tabs)/learning'),
+                        onPress: () => {
+                            // Save transaction to backend
+                            paymentService.initiatePayment({
+                                amount: subscriptionPrice,
+                                paymentMethod: selectedMethod,
+                                phoneNumber: phoneNumber.trim(),
+                            });
+                            router.push('/(tabs)/learning');
+                        },
                     },
                 ]
             );

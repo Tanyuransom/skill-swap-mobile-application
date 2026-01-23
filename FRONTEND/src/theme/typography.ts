@@ -22,6 +22,34 @@ export const typography = {
         fontWeight: '700' as const,
     },
 
+    h1: {
+        fontFamily: fontFamily.bold,
+        fontSize: 28,
+        lineHeight: 36,
+        fontWeight: '700' as const,
+    },
+
+    h2: {
+        fontFamily: fontFamily.bold,
+        fontSize: 24,
+        lineHeight: 32,
+        fontWeight: '700' as const,
+    },
+
+    h3: {
+        fontFamily: fontFamily.semiBold,
+        fontSize: 20,
+        lineHeight: 28,
+        fontWeight: '600' as const,
+    },
+
+    h4: {
+        fontFamily: fontFamily.semiBold,
+        fontSize: 18,
+        lineHeight: 24,
+        fontWeight: '600' as const,
+    },
+
     title: {
         fontFamily: fontFamily.semiBold,
         fontSize: 24,

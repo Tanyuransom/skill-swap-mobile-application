@@ -14,6 +14,11 @@ export const spacing = {
     xl: 40,
     xxl: 48,
     xxxl: 64,
+    // Aliases for compatibility
+    small: 8,
+    medium: 16,
+    large: 24,
+    xlarge: 40,
 } as const;
 
 // Padding shortcuts
