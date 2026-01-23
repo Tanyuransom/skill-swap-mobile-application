@@ -85,6 +85,13 @@ export const typography = {
         fontWeight: '400' as const,
     },
 
+    label: {
+        fontFamily: fontFamily.semiBold,
+        fontSize: 14,
+        lineHeight: 20,
+        fontWeight: '500' as const,
+    },
+
     button: {
         fontFamily: fontFamily.semiBold,
         fontSize: 15,
