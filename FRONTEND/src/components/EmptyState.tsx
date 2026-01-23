@@ -4,18 +4,22 @@
  */
 
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
-import { MagnifyingGlass, BookOpen, ChatCircle, Bell } from 'phosphor-react-native';
+import { MagnifyingGlass, BookOpen, ChatCircle, Bell, Article, Video } from 'phosphor-react-native';
 import { AppColors } from '../theme/colors';
 import { typography } from '../theme/typography';
 import { spacing } from '../theme/spacing';
+import { TouchableOpacity } from 'react-native';
+import { radius } from '../theme/radius';
 
 interface EmptyStateProps {
-    icon?: 'search' | 'courses' | 'messages' | 'notifications';
+    icon?: 'search' | 'courses' | 'messages' | 'notifications' | 'feed' | 'course' | 'post' | 'reel';
     title: string;
     message: string;
+    actionLabel?: string;
+    onAction?: () => void;
 }
 
-export function EmptyState({ icon = 'search', title, message }: EmptyStateProps) {
+export function EmptyState({ icon = 'search', title, message, actionLabel, onAction }: EmptyStateProps) {
     const colorScheme = useColorScheme();
     const isDark = colorScheme === 'dark';
 
@@ -26,6 +30,10 @@ export function EmptyState({ icon = 'search', title, message }: EmptyStateProps)
         courses: BookOpen,
         messages: ChatCircle,
         notifications: Bell,
+        feed: Article,
+        course: BookOpen,
+        post: Article,
+        reel: Video,
     }[icon];
 
     return (
@@ -45,6 +53,18 @@ export function EmptyState({ icon = 'search', title, message }: EmptyStateProps)
             ]}>
                 {message}
             </Text>
+            {actionLabel && onAction && (
+                <TouchableOpacity
+                    style={[styles.actionButton, {
+                        backgroundColor: isDark ? AppColors.primaryDarkMode : AppColors.primary
+                    }]}
+                    onPress={onAction}
+                >
+                    <Text style={[typography.button, { color: '#fff' }]}>
+                        {actionLabel}
+                    </Text>
+                </TouchableOpacity>
+            )}
         </View>
     );
 }
@@ -64,5 +84,11 @@ const styles = StyleSheet.create({
         marginTop: spacing.xs,
         textAlign: 'center',
         maxWidth: 280,
+    },
+    actionButton: {
+        marginTop: spacing.lg,
+        paddingHorizontal: spacing.xl,
+        paddingVertical: spacing.md,
+        borderRadius: radius.full,
     },
 });
