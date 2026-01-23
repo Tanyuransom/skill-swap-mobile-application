@@ -18,7 +18,7 @@ WebBrowser.maybeCompleteAuthSession();
 // TODO: Replace with your actual Google Client IDs from Google Cloud Console
 const GOOGLE_CLIENT_ID_WEB = '529526504833-nkunvqn2mto9qrr4rmbq5h75c7etav9b.apps.googleusercontent.com';
 const GOOGLE_CLIENT_ID_IOS = '';
-const GOOGLE_CLIENT_ID_ANDROID = '';
+const GOOGLE_CLIENT_ID_ANDROID = '829756738508-526a5hh3lsj1709tc2kjq2d5jkvh7o3u.apps.googleusercontent.com';
 
 /**
  * Custom Hook for Google Sign-In
