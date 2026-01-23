@@ -36,8 +36,7 @@
       "expo-font"
     ],
     "experiments": {
-      "typedRoutes": true,
-      "tsconfigPaths": true
+      "typedRoutes": true
     },
     "extra": {
       "eas": {
