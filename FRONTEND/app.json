@@ -16,14 +16,21 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.skillswapp.app"
+      "bundleIdentifier": "com.skillswapp.app",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/skillswap_logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.skillswapp.app"
+      "package": "com.skillswapp.app",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -34,7 +41,16 @@
       "expo-router",
       "expo-asset",
       "expo-font",
-      "expo-build-properties"
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0"
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -43,6 +59,9 @@
       "eas": {
         "projectId": "2055743a-84b9-43dc-8679-c9a0b32dae6d"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/2055743a-84b9-43dc-8679-c9a0b32dae6d"
     }
   }
 }
