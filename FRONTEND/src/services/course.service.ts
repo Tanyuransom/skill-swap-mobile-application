@@ -5,6 +5,30 @@
 
 import { apiService } from './api';
 
+export interface Module {
+    id: string;
+    courseId: string;
+    title: string;
+    description?: string;
+    orderIndex: number;
+    createdAt: string;
+    updatedAt: string;
+    lessons?: Lesson[];
+}
+
+export interface Lesson {
+    id: string;
+    moduleId: string;
+    title: string;
+    content?: string;
+    videoUrl?: string;
+    durationMinutes?: number;
+    orderIndex: number;
+    isFree: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface Course {
     id: string;
     tutorId: string;
@@ -19,6 +43,7 @@ export interface Course {
     isPublished: boolean;
     createdAt: string;
     updatedAt: string;
+    modules?: Module[];
 }
 
 export interface CreateCourseRequest {
