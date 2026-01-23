@@ -202,7 +202,7 @@ export default function ManageCourseScreen() {
 
                     {/* Modules List */}
                     {course.modules && course.modules.length > 0 ? (
-                        course.modules.map((module, index) => (
+                        course.modules.map((module: any, index: number) => (
                             <View key={module.id} style={[styles.moduleCard, {
                                 backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surface
                             }]}>
