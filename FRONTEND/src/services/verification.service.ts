@@ -115,6 +115,17 @@ class VerificationService {
 
         return response.data;
     }
+
+    /**
+     * Upload certificate for verification
+     */
+    async uploadCertificate(formData: FormData): Promise<void> {
+        const response = await apiService.post('/verification/upload-certificate', formData);
+
+        if (!response.success) {
+            throw new Error(response.message || 'Failed to upload certificate');
+        }
+    }
 }
 
 export const verificationService = new VerificationService();
