@@ -19,12 +19,12 @@ import {
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Envelope } from 'phosphor-react-native';
-import { AppColors } from '../src/theme/colors';
-import { typography } from '../src/theme/typography';
-import { spacing } from '../src/theme/spacing';
-import { radius } from '../src/theme/radius';
-import { useAuth } from '../src/hooks/useAuth';
-import { VerificationContext } from '../src/types/auth.types';
+import { AppColors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
+import { spacing } from '@/theme/spacing';
+import { radius } from '@/theme/radius';
+import { useAuth } from '@/hooks/useAuth';
+import { VerificationContext } from '@/types/auth.types';
 
 export default function VerificationScreen() {
     const router = useRouter();

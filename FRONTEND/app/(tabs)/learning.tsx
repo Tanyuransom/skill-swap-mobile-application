@@ -15,14 +15,14 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { GraduationCap, Clock, CheckCircle } from 'phosphor-react-native';
-import { AppColors } from '../../src/theme/colors';
-import { typography } from '../../src/theme/typography';
-import { spacing } from '../../src/theme/spacing';
-import { radius } from '../../src/theme/radius';
-import { learningService, type Enrollment } from '../../src/services/learning.service';
-import { courseService } from '../../src/services/course.service';
-import { Loading } from '../../src/components/Loading';
-import { EmptyState } from '../../src/components/EmptyState';
+import { AppColors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
+import { spacing } from '@/theme/spacing';
+import { radius } from '@/theme/radius';
+import { learningService, type Enrollment } from '@/services/learning.service';
+import { courseService } from '@/services/course.service';
+import { Loading } from '@/components/Loading';
+import { EmptyState } from '@/components/EmptyState';
 
 interface EnrollmentWithCourse extends Enrollment {
     courseTitle?: string;

@@ -16,13 +16,13 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MagnifyingGlass, Clock, TrendUp } from 'phosphor-react-native';
-import { AppColors } from '../../src/theme/colors';
-import { typography } from '../../src/theme/typography';
-import { spacing } from '../../src/theme/spacing';
-import { radius } from '../../src/theme/radius';
-import { courseService, type Course } from '../../src/services/course.service';
-import { Loading } from '../../src/components/Loading';
-import { EmptyState } from '../../src/components/EmptyState';
+import { AppColors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
+import { spacing } from '@/theme/spacing';
+import { radius } from '@/theme/radius';
+import { courseService, type Course } from '@/services/course.service';
+import { Loading } from '@/components/Loading';
+import { EmptyState } from '@/components/EmptyState';
 
 export default function CoursesScreen() {
     const colorScheme = useColorScheme();

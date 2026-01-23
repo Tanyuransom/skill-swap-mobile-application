@@ -16,13 +16,13 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, Clock, TrendUp, User, Play } from 'phosphor-react-native';
-import { AppColors } from '../../src/theme/colors';
-import { typography } from '../../src/theme/typography';
-import { spacing } from '../../src/theme/spacing';
-import { radius } from '../../src/theme/radius';
-import { courseService, type Course } from '../../src/services/course.service';
-import { learningService } from '../../src/services/learning.service';
-import { Loading } from '../../src/components/Loading';
+import { AppColors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
+import { spacing } from '@/theme/spacing';
+import { radius } from '@/theme/radius';
+import { courseService, type Course } from '@/services/course.service';
+import { learningService } from '@/services/learning.service';
+import { Loading } from '@/components/Loading';
 
 export default function CourseDetailScreen() {
     const colorScheme = useColorScheme();

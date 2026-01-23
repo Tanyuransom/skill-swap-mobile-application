@@ -8,9 +8,9 @@ import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useThemeStore } from './src/store/themeStore';
-import { AppColors } from './src/theme/colors';
-import { AuthProvider } from './src/contexts/AuthContext';
+import { useThemeStore } from '@/store/themeStore';
+import { AppColors } from '@/theme/colors';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();

@@ -12,13 +12,13 @@ import {
     useColorScheme,
 } from 'react-native';
 import { CheckCircle, XCircle, Clock } from 'phosphor-react-native';
-import { AppColors } from '../../src/theme/colors';
-import { typography } from '../../src/theme/typography';
-import { spacing } from '../../src/theme/spacing';
-import { radius } from '../../src/theme/radius';
-import { paymentService, type Transaction } from '../../src/services/payment.service';
-import { Loading } from '../../src/components/Loading';
-import { EmptyState } from '../../src/components/EmptyState';
+import { AppColors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
+import { spacing } from '@/theme/spacing';
+import { radius } from '@/theme/radius';
+import { paymentService, type Transaction } from '@/services/payment.service';
+import { Loading } from '@/components/Loading';
+import { EmptyState } from '@/components/EmptyState';
 
 export default function PaymentHistoryScreen() {
     const colorScheme = useColorScheme();

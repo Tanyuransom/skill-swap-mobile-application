@@ -8,8 +8,8 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme, Platform } from 'react-native';
 import { House, BookOpen, GraduationCap, ChatCircle, User } from 'phosphor-react-native';
-import { AppColors } from '../../src/theme/colors';
-import { typography } from '../../src/theme/typography';
+import { AppColors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
 
 export default function TabsLayout() {
     const colorScheme = useColorScheme();

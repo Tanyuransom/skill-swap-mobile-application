@@ -19,11 +19,11 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Key, Envelope, ArrowLeft } from 'phosphor-react-native';
-import { AppColors } from '../src/theme/colors';
-import { typography } from '../src/theme/typography';
-import { spacing } from '../src/theme/spacing';
-import { radius } from '../src/theme/radius';
-import { useAuth } from '../src/hooks/useAuth';
+import { AppColors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
+import { spacing } from '@/theme/spacing';
+import { radius } from '@/theme/radius';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function ForgotPasswordScreen() {
     const router = useRouter();

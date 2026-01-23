@@ -12,6 +12,11 @@ export const radius = {
     large: 16,
     xlarge: 24,
     full: 9999,
+    // Aliases
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 24,
 } as const;
 
 export const shadows = {

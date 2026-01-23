@@ -14,13 +14,13 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ChatCircle, User } from 'phosphor-react-native';
-import { AppColors } from '../../src/theme/colors';
-import { typography } from '../../src/theme/typography';
-import { spacing } from '../../src/theme/spacing';
-import { radius } from '../../src/theme/radius';
-import { messagingService, type Conversation } from '../../src/services/messaging.service';
-import { Loading } from '../../src/components/Loading';
-import { EmptyState } from '../../src/components/EmptyState';
+import { AppColors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
+import { spacing } from '@/theme/spacing';
+import { radius } from '@/theme/radius';
+import { messagingService, type Conversation } from '@/services/messaging.service';
+import { Loading } from '@/components/Loading';
+import { EmptyState } from '@/components/EmptyState';
 
 export default function MessagesScreen() {
     const colorScheme = useColorScheme();
