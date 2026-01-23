@@ -7,8 +7,8 @@
 import { useEffect, useState } from 'react';
 import { View, Image, ActivityIndicator, StyleSheet, useColorScheme, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
-import { AppColors } from '@/theme/colors';
-import { useAuth } from '@/hooks/useAuth';
+import { AppColors } from './src/theme/colors';
+import { useAuth } from './src/hooks/useAuth';
 
 export default function Index() {
     const router = useRouter();

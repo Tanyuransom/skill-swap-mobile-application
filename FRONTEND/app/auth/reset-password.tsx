@@ -19,11 +19,11 @@ import {
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Key, Lock, Eye, EyeSlash } from 'phosphor-react-native';
-import { AppColors } from '@/theme/colors';
-import { typography } from '@/theme/typography';
-import { spacing } from '@/theme/spacing';
-import { radius } from '@/theme/radius';
-import { useAuth } from '@/hooks/useAuth';
+import { AppColors } from '../src/theme/colors';
+import { typography } from '../src/theme/typography';
+import { spacing } from '../src/theme/spacing';
+import { radius } from '../src/theme/radius';
+import { useAuth } from '../src/hooks/useAuth';
 
 export default function ResetPasswordScreen() {
     const router = useRouter();

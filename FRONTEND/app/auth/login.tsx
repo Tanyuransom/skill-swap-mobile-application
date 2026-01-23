@@ -21,13 +21,13 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Eye, EyeSlash, Envelope, Lock } from 'phosphor-react-native';
-import { AppColors } from '@/theme/colors';
-import { typography } from '@/theme/typography';
-import { spacing } from '@/theme/spacing';
-import { radius } from '@/theme/radius';
+import { AppColors } from '../src/theme/colors';
+import { typography } from '../src/theme/typography';
+import { spacing } from '../src/theme/spacing';
+import { radius } from '../src/theme/radius';
 import { useRef } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { googleAuthService, useGoogleAuth } from '@/services/google-auth.service';
+import { useAuth } from '../src/hooks/useAuth';
+import { googleAuthService, useGoogleAuth } from '../src/services/google-auth.service';
 
 export default function LoginScreen() {
     const router = useRouter();
