@@ -1,59 +1,57 @@
 /**
- * Start Verification Screen
- * Choose skill to verify
+ * Select Category Screen (Enhanced)
+ * Choose from 300+ categories for verification
  */
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     TouchableOpacity,
-    useColorScheme,
     ScrollView,
-    Alert,
+    TextInput,
+    useColorScheme,
+    SectionList,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, CheckCircle } from 'phosphor-react-native';
+import { ArrowLeft, MagnifyingGlass, CheckCircle } from 'phosphor-react-native';
 import { AppColors } from '@/theme/colors';
 import { typography } from '@/theme/typography';
 import { spacing } from '@/theme/spacing';
 import { radius } from '@/theme/radius';
-import { verificationService } from '@/services/verification.service';
+import { CATEGORIES, getMainCategories, getCategoriesByMain, searchCategories, type Category } from '@/data/categories';
 
-const AVAILABLE_SKILLS = [
-    'Web Development',
-    'Mobile Development',
-    'Data Science',
-    'Machine Learning',
-    'UI/UX Design',
-    'Digital Marketing',
-    'Photography',
-    'Video Editing',
-    'Graphic Design',
-    'Content Writing',
-];
-
-export default function StartVerificationScreen() {
+export default function SelectCategoryScreen() {
     const colorScheme = useColorScheme();
     const isDark = colorScheme === 'dark';
     const router = useRouter();
 
-    const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
-    const [submitting, setSubmitting] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
-    const handleStart = async () => {
-        if (!selectedSkill) return;
+    const filteredCategories = useMemo(() => {
+        if (searchQuery.trim()) {
+            return searchCategories(searchQuery);
+        }
 
-        try {
-            setSubmitting(true);
-            const request = await verificationService.requestVerification(selectedSkill);
-            router.push(`/tutor/verification/exam?requestId=${request.id}` as any);
-        } catch (error) {
-            console.error('Failed to start verification:', error);
-            Alert.alert('Error', 'Failed to start verification');
-        } finally {
-            setSubmitting(false);
+        // Group by main category
+        const mainCategories = getMainCategories();
+        return mainCategories.map(main => ({
+            title: main,
+            data: getCategoriesByMain(main),
+        }));
+    }, [searchQuery]);
+
+    const handleContinue = () => {
+        if (selectedCategory) {
+            router.push({
+                pathname: '/tutor/verification/upload-certificate' as any,
+                params: {
+                    categoryId: selectedCategory.id,
+                    categoryName: selectedCategory.name,
+                },
+            });
         }
     };
 
@@ -67,35 +65,47 @@ export default function StartVerificationScreen() {
                 <Text style={[typography.h2, {
                     color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary
                 }]}>
-                    Get Verified
+                    Select Category
                 </Text>
                 <View style={{ width: 24 }} />
             </View>
 
-            <ScrollView contentContainerStyle={styles.content}>
-                <Text style={[typography.body, styles.description, {
-                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary
-                }]}>
-                    Choose a skill to verify. You'll take a short exam and receive a badge upon passing.
-                </Text>
+            {/* Search Bar */}
+            <View style={[styles.searchContainer, {
+                backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surface
+            }]}>
+                <MagnifyingGlass size={20} color={isDark ? AppColors.textSecondaryDark : AppColors.textSecondary} />
+                <TextInput
+                    style={[styles.searchInput, {
+                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary
+                    }]}
+                    placeholder="Search 300+ categories..."
+                    placeholderTextColor={isDark ? AppColors.textSecondaryDark : AppColors.textSecondary}
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                />
+            </View>
 
-                <View style={styles.skillsGrid}>
-                    {AVAILABLE_SKILLS.map((skill) => (
+            {/* Categories List */}
+            {searchQuery.trim() ? (
+                // Search Results
+                <ScrollView contentContainerStyle={styles.content}>
+                    {filteredCategories.map((category: Category) => (
                         <TouchableOpacity
-                            key={skill}
+                            key={category.id}
                             style={[
-                                styles.skillCard,
+                                styles.categoryCard,
                                 {
                                     backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surface,
                                     borderWidth: 2,
-                                    borderColor: selectedSkill === skill
+                                    borderColor: selectedCategory?.id === category.id
                                         ? (isDark ? AppColors.primaryDarkMode : AppColors.primary)
                                         : 'transparent',
                                 }
                             ]}
-                            onPress={() => setSelectedSkill(skill)}
+                            onPress={() => setSelectedCategory(category)}
                         >
-                            {selectedSkill === skill && (
+                            {selectedCategory?.id === category.id && (
                                 <CheckCircle
                                     size={20}
                                     color={isDark ? AppColors.primaryDarkMode : AppColors.primary}
@@ -106,27 +116,91 @@ export default function StartVerificationScreen() {
                             <Text style={[typography.bodyMedium, {
                                 color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary
                             }]}>
-                                {skill}
+                                {category.name}
+                            </Text>
+                            <Text style={[typography.caption, {
+                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                                marginTop: 2
+                            }]}>
+                                {category.main} → {category.sub}
                             </Text>
                         </TouchableOpacity>
                     ))}
-                </View>
+                </ScrollView>
+            ) : (
+                // Grouped by Main Category
+                <SectionList
+                    sections={filteredCategories as any}
+                    keyExtractor={(item: Category) => item.id}
+                    renderSectionHeader={({ section: { title } }) => (
+                        <View style={[styles.sectionHeader, {
+                            backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background
+                        }]}>
+                            <Text style={[typography.h4, {
+                                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary
+                            }]}>
+                                {title}
+                            </Text>
+                        </View>
+                    )}
+                    renderItem={({ item }: { item: Category }) => (
+                        <TouchableOpacity
+                            style={[
+                                styles.categoryCard,
+                                {
+                                    backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surface,
+                                    borderWidth: 2,
+                                    borderColor: selectedCategory?.id === item.id
+                                        ? (isDark ? AppColors.primaryDarkMode : AppColors.primary)
+                                        : 'transparent',
+                                }
+                            ]}
+                            onPress={() => setSelectedCategory(item)}
+                        >
+                            {selectedCategory?.id === item.id && (
+                                <CheckCircle
+                                    size={20}
+                                    color={isDark ? AppColors.primaryDarkMode : AppColors.primary}
+                                    weight="fill"
+                                    style={styles.checkIcon}
+                                />
+                            )}
+                            <Text style={[typography.bodyMedium, {
+                                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary
+                            }]}>
+                                {item.name}
+                            </Text>
+                            {item.sub && (
+                                <Text style={[typography.caption, {
+                                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                                    marginTop: 2
+                                }]}>
+                                    {item.sub}
+                                </Text>
+                            )}
+                        </TouchableOpacity>
+                    )}
+                    contentContainerStyle={styles.list}
+                />
+            )}
 
+            {/* Continue Button */}
+            <View style={styles.footer}>
                 <TouchableOpacity
-                    style={[styles.startButton, {
-                        backgroundColor: selectedSkill
+                    style={[styles.continueButton, {
+                        backgroundColor: selectedCategory
                             ? (isDark ? AppColors.primaryDarkMode : AppColors.primary)
                             : (isDark ? AppColors.surfaceDark : AppColors.surface),
-                        opacity: (selectedSkill && !submitting) ? 1 : 0.5
+                        opacity: selectedCategory ? 1 : 0.5
                     }]}
-                    onPress={handleStart}
-                    disabled={!selectedSkill || submitting}
+                    onPress={handleContinue}
+                    disabled={!selectedCategory}
                 >
                     <Text style={[typography.button, { color: '#fff' }]}>
-                        {submitting ? 'Starting...' : 'Start Verification'}
+                        Continue
                     </Text>
                 </TouchableOpacity>
-            </ScrollView>
+            </View>
         </View>
     );
 }
@@ -145,33 +219,53 @@ const styles = StyleSheet.create({
     backButton: {
         padding: 4,
     },
-    content: {
-        padding: spacing.md,
-    },
-    description: {
-        marginBottom: spacing.lg,
-        lineHeight: 22,
-    },
-    skillsGrid: {
+    searchContainer: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
+        alignItems: 'center',
+        margin: spacing.md,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
+        borderRadius: radius.lg,
         gap: spacing.sm,
     },
-    skillCard: {
+    searchInput: {
+        flex: 1,
+        fontSize: 16,
+    },
+    content: {
+        padding: spacing.md,
+        gap: spacing.sm,
+    },
+    list: {
+        paddingBottom: 100,
+    },
+    sectionHeader: {
+        paddingVertical: spacing.md,
+        paddingHorizontal: spacing.md,
+    },
+    categoryCard: {
         padding: spacing.md,
         borderRadius: radius.lg,
-        minWidth: '47%',
+        marginHorizontal: spacing.md,
+        marginBottom: spacing.sm,
         position: 'relative',
     },
     checkIcon: {
         position: 'absolute',
-        top: spacing.xs,
-        right: spacing.xs,
+        top: spacing.sm,
+        right: spacing.sm,
     },
-    startButton: {
-        borderRadius: radius.lg,
+    footer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
         padding: spacing.md,
+        paddingBottom: spacing.xl,
+    },
+    continueButton: {
+        padding: spacing.md,
+        borderRadius: radius.lg,
         alignItems: 'center',
-        marginTop: spacing.xl,
     },
 });
