@@ -87,6 +87,25 @@ class ReelsService {
             throw new Error('Failed to unlike reel');
         }
     }
+
+    /**
+     * Create new reel
+     */
+    async createReel(data: {
+        videoUrl: string;
+        thumbnailUrl: string;
+        title: string;
+        description?: string;
+        duration: number;
+    }): Promise<Reel> {
+        const response = await apiService.post<Reel>('/reels', data);
+
+        if (!response.success || !response.data) {
+            throw new Error('Failed to create reel');
+        }
+
+        return response.data;
+    }
 }
 
 export const reelsService = new ReelsService();
