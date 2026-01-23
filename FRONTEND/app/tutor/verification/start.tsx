@@ -90,7 +90,7 @@ export default function SelectCategoryScreen() {
             {searchQuery.trim() ? (
                 // Search Results
                 <ScrollView contentContainerStyle={styles.content}>
-                    {filteredCategories.map((category: Category) => (
+                    {(filteredCategories as Category[]).map((category) => (
                         <TouchableOpacity
                             key={category.id}
                             style={[
