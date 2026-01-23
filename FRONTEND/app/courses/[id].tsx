@@ -137,13 +137,6 @@ export default function CourseDetailScreen() {
                         )}
                     </View>
 
-                    {/* Price */}
-                    <Text style={[typography.h1, styles.price, {
-                        color: isDark ? AppColors.primaryDarkMode : AppColors.primary
-                    }]}>
-                        {course.price === 0 ? 'Free' : `$${course.price}`}
-                    </Text>
-
                     {/* Description */}
                     <View style={styles.section}>
                         <Text style={[typography.h3, { color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary }]}>
@@ -191,7 +184,7 @@ export default function CourseDetailScreen() {
                     disabled={enrolling}
                 >
                     <Text style={[typography.button, { color: '#fff' }]}>
-                        {enrolling ? 'Enrolling...' : course.price === 0 ? 'Enroll for Free' : `Enroll for $${course.price}`}
+                        {enrolling ? 'Enrolling...' : 'Start Learning'}
                     </Text>
                 </TouchableOpacity>
             </View>

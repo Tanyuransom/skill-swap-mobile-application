@@ -117,12 +117,6 @@ export default function CoursesScreen() {
                         </View>
                     )}
                 </View>
-
-                <Text style={[typography.h3, styles.price, {
-                    color: isDark ? AppColors.primaryDarkMode : AppColors.primary
-                }]}>
-                    {item.price === 0 ? 'Free' : `$${item.price}`}
-                </Text>
             </View>
         </TouchableOpacity>
     );
