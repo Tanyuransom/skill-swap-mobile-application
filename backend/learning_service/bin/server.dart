@@ -1,3 +1,6 @@
+// ignore: unused_import
+// ignore_for_file: unnecessary_import
+
 import 'dart:io';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:dotenv/dotenv.dart';

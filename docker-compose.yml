@@ -5,70 +5,231 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: skillswapp_postgres
-    restart: unless-stopped
     environment:
       POSTGRES_DB: skillswapp
       POSTGRES_USER: skillswapp_user
-      POSTGRES_PASSWORD: skillswapp_dev_password_2024
-      PGDATA: /var/lib/postgresql/data/pgdata
-    ports:
-      - "5432:5432"
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-skillswapp_secure_password_2024}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
-      - ./database/seeds:/docker-entrypoint-initdb.d/seeds
-    networks:
-      - skillswapp_network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U skillswapp_user -d skillswapp"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # Redis Cache
-  redis:
-    image: redis:7-alpine
-    container_name: skillswapp_redis
-    restart: unless-stopped
-    command: redis-server --requirepass skillswapp_redis_password_2024
+      - ./backend/database/migrations:/docker-entrypoint-initdb.d:ro
     ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
+      - "5432:5432"
     networks:
       - skillswapp_network
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: [ "CMD-SHELL", "pg_isready -U skillswapp_user -d skillswapp" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # pgAdmin - Database Management UI (Optional, for development)
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: skillswapp_pgadmin
-    restart: unless-stopped
+  # Auth Service (Port 8081)
+  auth_service:
+    build:
+      context: ./backend/auth_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_auth
+    ports:
+      - "8081:8081"
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@skillswapp.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    ports:
-      - "5050:80"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      JWT_SECRET: ${JWT_SECRET:-your_super_secret_jwt_key_change_in_production}
+      PORT: 8081
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - skillswapp_network
-    depends_on:
-      - postgres
+    restart: unless-stopped
 
-volumes:
-  postgres_data:
-    driver: local
-  redis_data:
-    driver: local
-  pgadmin_data:
-    driver: local
+  # User Service (Port 8082)
+  user_service:
+    build:
+      context: ./backend/user_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_user
+    ports:
+      - "8082:8082"
+    environment:
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      PORT: 8082
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Course Service (Port 8083)
+  course_service:
+    build:
+      context: ./backend/course_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_course
+    ports:
+      - "8083:8083"
+    environment:
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      PORT: 8083
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Learning Service (Port 8084)
+  learning_service:
+    build:
+      context: ./backend/learning_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_learning
+    ports:
+      - "8084:8084"
+    environment:
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      PORT: 8084
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Messaging Service (Port 8086)
+  messaging_service:
+    build:
+      context: ./backend/messaging_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_messaging
+    ports:
+      - "8086:8086"
+    environment:
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      PORT: 8086
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Payment Service (Port 8087)
+  payment_service:
+    build:
+      context: ./backend/payment_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_payment
+    ports:
+      - "8087:8087"
+    environment:
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      CAMPAY_API_KEY: ${CAMPAY_API_KEY:-your_campay_api_key}
+      PORT: 8087
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Notification Service (Port 8088)
+  notification_service:
+    build:
+      context: ./backend/notification_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_notification
+    ports:
+      - "8088:8088"
+    environment:
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      PORT: 8088
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Social Feed Service (Port 8089)
+  social_feed_service:
+    build:
+      context: ./backend/social_feed_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_social
+    ports:
+      - "8089:8089"
+    environment:
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      PORT: 8089
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Reels Service (Port 8090)
+  reels_service:
+    build:
+      context: ./backend/reels_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_reels
+    ports:
+      - "8090:8090"
+    environment:
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-your_cloud_name}
+      PORT: 8090
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Analytics Service (Port 8091)
+  analytics_service:
+    build:
+      context: ./backend/analytics_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_analytics
+    ports:
+      - "8091:8091"
+    environment:
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      PORT: 8091
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Verification Service (Port 8093) - Mistral AI
+  verification_service:
+    build:
+      context: ./backend/verification_service
+      dockerfile: Dockerfile
+    container_name: skillswapp_verification
+    ports:
+      - "8093:8093"
+    environment:
+      DATABASE_URL: postgresql://skillswapp_user:${DB_PASSWORD:-skillswapp_secure_password_2024}@postgres:5432/skillswapp
+      MISTRAL_API_KEY: ${MISTRAL_API_KEY:-your_mistral_api_key}
+      MISTRAL_MODEL: mistral-small
+      PORT: 8093
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
 
 networks:
   skillswapp_network:
     driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

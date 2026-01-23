@@ -3,11 +3,14 @@ import 'package:shelf/shelf.dart';
 import '../models/register_request.dart';
 import '../models/login_request.dart';
 import '../models/otp_request.dart';
+import '../models/google_auth_request.dart';
 import '../services/auth_service.dart';
+import '../services/google_oauth_service.dart';
 import '../../../shared/lib/skillswapp_shared.dart';
 
 class AuthController {
   final AuthService _authService = AuthService();
+  final GoogleOAuthService _googleOAuthService = GoogleOAuthService();
 
   /// POST /register
   Future<Response> register(Request request) async {
@@ -51,7 +54,8 @@ class AuthController {
       print('❌ Registration error: $e');
       print('Stack trace: $stackTrace');
       return Response.internalServerError(
-        body: ApiResponse.error(message: 'Registration failed: ${e.toString()}').toJsonString(),
+        body: ApiResponse.error(message: 'Registration failed: ${e.toString()}')
+            .toJsonString(),
         headers: {'Content-Type': 'application/json'},
       );
     }
@@ -90,7 +94,8 @@ class AuthController {
       );
     } catch (e) {
       return Response.internalServerError(
-        body: ApiResponse.error(message: 'OTP verification failed').toJsonString(),
+        body: ApiResponse.error(message: 'OTP verification failed')
+            .toJsonString(),
         headers: {'Content-Type': 'application/json'},
       );
     }
@@ -182,7 +187,8 @@ class AuthController {
       final authHeader = request.headers['authorization'];
       if (authHeader == null || !authHeader.startsWith('Bearer ')) {
         return Response.unauthorized(
-          ApiResponse.error(message: 'Missing authorization header').toJsonString(),
+          ApiResponse.error(message: 'Missing authorization header')
+              .toJsonString(),
           headers: {'Content-Type': 'application/json'},
         );
       }
@@ -210,7 +216,8 @@ class AuthController {
 
       if (refreshToken == null || refreshToken.isEmpty) {
         return Response.badRequest(
-          body: ApiResponse.error(message: 'Refresh token is required').toJsonString(),
+          body: ApiResponse.error(message: 'Refresh token is required')
+              .toJsonString(),
           headers: {'Content-Type': 'application/json'},
         );
       }
@@ -260,7 +267,8 @@ class AuthController {
       );
     } catch (e) {
       return Response.internalServerError(
-        body: ApiResponse.error(message: 'Failed to process request').toJsonString(),
+        body: ApiResponse.error(message: 'Failed to process request')
+            .toJsonString(),
         headers: {'Content-Type': 'application/json'},
       );
     }
@@ -290,7 +298,8 @@ class AuthController {
       );
 
       return Response.ok(
-        ApiResponse.success(message: 'Password reset successfully').toJsonString(),
+        ApiResponse.success(message: 'Password reset successfully')
+            .toJsonString(),
         headers: {'Content-Type': 'application/json'},
       );
     } on InvalidOTPException catch (e) {
@@ -305,7 +314,8 @@ class AuthController {
       );
     } catch (e) {
       return Response.internalServerError(
-        body: ApiResponse.error(message: 'Password reset failed').toJsonString(),
+        body:
+            ApiResponse.error(message: 'Password reset failed').toJsonString(),
         headers: {'Content-Type': 'application/json'},
       );
     }
@@ -315,7 +325,7 @@ class AuthController {
   Future<Response> getCurrentUser(Request request) async {
     try {
       final userId = request.context['userId'] as String?;
-      
+
       if (userId == null) {
         return Response.unauthorized(
           ApiResponse.error(message: 'Unauthorized').toJsonString(),
@@ -332,6 +342,38 @@ class AuthController {
     } catch (e) {
       return Response.internalServerError(
         body: ApiResponse.error(message: 'Failed to get user').toJsonString(),
+        headers: {'Content-Type': 'application/json'},
+      );
+    }
+  }
+
+  /// POST /google-auth
+  Future<Response> googleAuth(Request request) async {
+    try {
+      final body = jsonDecode(await request.readAsString());
+      final googleRequest = GoogleAuthRequest.fromJson(body);
+
+      // Validate request
+      googleRequest.validate();
+
+      final result = await _googleOAuthService.authenticateWithGoogle(
+        googleRequest.idToken!,
+      );
+
+      return Response.ok(
+        ApiResponse.success(
+          message: 'Google authentication successful',
+          data: result,
+        ).toJsonString(),
+        headers: {'Content-Type': 'application/json'},
+      );
+    } catch (e, stackTrace) {
+      print('Google auth error: $e');
+      print('Stack trace: $stackTrace');
+      return Response.internalServerError(
+        body: ApiResponse.error(
+          message: 'Google authentication failed: ${e.toString()}',
+        ).toJsonString(),
         headers: {'Content-Type': 'application/json'},
       );
     }

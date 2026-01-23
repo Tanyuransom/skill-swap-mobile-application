@@ -17,10 +17,19 @@ class AuthRoutes {
     router.post('/refresh-token', _controller.refreshToken);
     router.post('/forgot-password', _controller.forgotPassword);
     router.post('/reset-password', _controller.resetPassword);
+    router.post('/google-auth', _controller.googleAuth);
 
     // Protected routes (authentication required)
-    router.post('/logout', Pipeline().addMiddleware(authMiddleware()).addHandler(_controller.logout));
-    router.get('/me', Pipeline().addMiddleware(authMiddleware()).addHandler(_controller.getCurrentUser));
+    router.post(
+        '/logout',
+        Pipeline()
+            .addMiddleware(authMiddleware())
+            .addHandler(_controller.logout));
+    router.get(
+        '/me',
+        Pipeline()
+            .addMiddleware(authMiddleware())
+            .addHandler(_controller.getCurrentUser));
 
     return router;
   }
