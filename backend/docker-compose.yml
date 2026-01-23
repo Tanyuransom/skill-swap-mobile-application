@@ -18,7 +18,7 @@ services:
     networks:
       - skillswapp_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -292,6 +292,56 @@ services:
       - "8090:8090"
     environment:
       PORT: 8090
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Analytics Service - Port 8091
+  analytics_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: analytics_service
+        PORT: 8091
+    container_name: skillswapp_analytics_service
+    ports:
+      - "8091:8091"
+    environment:
+      PORT: 8091
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: skillswapp
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres123}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - skillswapp_network
+    restart: unless-stopped
+
+  # Notification Service - Port 8092
+  notification_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: notification_service
+        PORT: 8092
+    container_name: skillswapp_notification_service
+    ports:
+      - "8092:8092"
+    environment:
+      PORT: 8092
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
       DATABASE_NAME: skillswapp

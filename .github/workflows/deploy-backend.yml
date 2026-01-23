@@ -1,0 +1,55 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Create app directory if it doesn't exist
+            mkdir -p ~/app
+            
+            # Navigate to app directory
+            cd ~/app
+            
+            # Initialize git if not already done (first time setup logic handled manually usually, but good to be safe)
+            if [ ! -d ".git" ]; then
+              git clone https://github.com/Tanyuransom/skill-swap-mobile-application.git .
+            else
+              git pull origin main
+            fi
+            
+            # Navigate to backend
+            cd backend
+            
+            # create .env files from secrets (simplified approach, better to use a secret manager but this works for basic setup)
+            # Note: We are assuming .env files are managed manually on the server or we can inject them here.
+            # For now, we will rely on .env files existing on the server or being created manually.
+            
+            # Stop existing services
+            # docker compose down # Optional: enables zero-downtime if we don't down, but safer to down for major changes
+            
+            # Build and start services
+            # We use the start_services.sh script logic but adapted for Docker
+            # Ideally we should use docker-compose.prod.yml
+            
+            docker compose up -d --build --remove-orphans
+            
+            # Prune unused images to save space
+            docker image prune -f

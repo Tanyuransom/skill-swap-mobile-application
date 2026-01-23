@@ -90,3 +90,6 @@ skillswapp/.dart_tool/
 skillswapp/build/
 skillswapp/.flutter-plugins
 skillswapp/.flutter-plugins-dependencies
+
+# VPS Keys
+keys/

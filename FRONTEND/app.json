@@ -8,9 +8,7 @@
     "scheme": "skillswapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+    "runtimeVersion": "1.0.0",
     "splash": {
       "image": "./assets/images/skillswap_logo.png",
       "resizeMode": "contain",

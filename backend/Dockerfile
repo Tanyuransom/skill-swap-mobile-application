@@ -7,11 +7,11 @@ WORKDIR /app
 # Copy pubspec files
 COPY pubspec.yaml pubspec.lock ./
 
+# Copy shared library (required for pub get)
+COPY shared/ ./shared/
+
 # Get dependencies
 RUN dart pub get
-
-# Copy shared library
-COPY shared/ ./shared/
 
 # Copy the specific service (will be overridden per service)
 ARG SERVICE_NAME
