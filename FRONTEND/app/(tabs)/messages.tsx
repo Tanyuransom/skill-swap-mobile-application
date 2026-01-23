@@ -5,9 +5,9 @@
  */
 
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
-import { AppColors } from '@/theme/colors';
-import { typography } from '@/theme/typography';
-import { spacing } from '@/theme/spacing';
+import { AppColors } from '../src/theme/colors';
+import { typography } from '../src/theme/typography';
+import { spacing } from '../src/theme/spacing';
 
 export default function MessagesScreen() {
     const colorScheme = useColorScheme();
