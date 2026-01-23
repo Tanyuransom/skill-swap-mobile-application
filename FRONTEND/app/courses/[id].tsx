@@ -22,7 +22,10 @@ import { spacing } from '@/theme/spacing';
 import { radius } from '@/theme/radius';
 import { courseService, type Course } from '@/services/course.service';
 import { learningService } from '@/services/learning.service';
+import { reviewService, type Review } from '@/services/review.service';
 import { Loading } from '@/components/Loading';
+import { ReviewList } from '@/components/ReviewList';
+import { StarRating } from '@/components/StarRating';
 
 export default function CourseDetailScreen() {
     const colorScheme = useColorScheme();
@@ -33,10 +36,13 @@ export default function CourseDetailScreen() {
     const [loading, setLoading] = useState(true);
     const [enrolling, setEnrolling] = useState(false);
     const [course, setCourse] = useState<Course | null>(null);
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [averageRating, setAverageRating] = useState(0);
 
     useEffect(() => {
         if (id) {
             loadCourse();
+            loadReviews();
         }
     }, [id]);
 
@@ -53,6 +59,21 @@ export default function CourseDetailScreen() {
         }
     };
 
+    const loadReviews = async () => {
+        try {
+            const data = await reviewService.getCourseReviews(id!);
+            setReviews(data);
+
+            // Calculate average rating
+            if (data.length > 0) {
+                const avg = data.reduce((sum, r) => sum + r.rating, 0) / data.length;
+                setAverageRating(Math.round(avg * 10) / 10);
+            }
+        } catch (error) {
+            console.error('Failed to load reviews:', error);
+        }
+    };
+
     const handleEnroll = async () => {
         try {
             setEnrolling(true);
@@ -65,6 +86,10 @@ export default function CourseDetailScreen() {
         } finally {
             setEnrolling(false);
         }
+    };
+
+    const handleAddReview = () => {
+        router.push(`/reviews/add?courseId=${id}` as any);
     };
 
     if (loading) {
@@ -260,6 +285,22 @@ const styles = StyleSheet.create({
     description: {
         marginTop: spacing.sm,
         lineHeight: 24,
+    },
+    reviewsHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginBottom: spacing.md,
+    },
+    ratingRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: spacing.xs,
+    },
+    addReviewButton: {
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
+        borderRadius: radius.md,
     },
     instructorCard: {
         flexDirection: 'row',
