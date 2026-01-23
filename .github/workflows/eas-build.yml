@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./FRONTEND
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build on EAS
         working-directory: ./FRONTEND
