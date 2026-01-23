@@ -21,6 +21,7 @@ import { typography } from '../../src/theme/typography';
 import { spacing } from '../../src/theme/spacing';
 import { radius } from '../../src/theme/radius';
 import { courseService, type Course } from '../../src/services/course.service';
+import { learningService } from '../../src/services/learning.service';
 import { Loading } from '../../src/components/Loading';
 
 export default function CourseDetailScreen() {
@@ -55,9 +56,9 @@ export default function CourseDetailScreen() {
     const handleEnroll = async () => {
         try {
             setEnrolling(true);
-            // TODO: Call enrollment endpoint when learning service is ready
+            await learningService.enrollInCourse(id!);
             Alert.alert('Success', 'Enrolled in course successfully!');
-            router.push('/learning');
+            router.push('/(tabs)/learning');
         } catch (error) {
             console.error('Enrollment failed:', error);
             Alert.alert('Error', 'Failed to enroll in course');
