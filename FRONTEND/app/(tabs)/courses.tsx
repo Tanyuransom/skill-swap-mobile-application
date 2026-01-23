@@ -72,7 +72,7 @@ export default function CoursesScreen() {
     const renderCourse = ({ item }: { item: Course }) => (
         <TouchableOpacity
             style={[styles.courseCard, { backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surface }]}
-            onPress={() => router.push(`/courses/${item.id}`)}
+            onPress={() => router.push(`/courses/${item.id}` as any)}
         >
             {item.thumbnailUrl ? (
                 <Image source={{ uri: item.thumbnailUrl }} style={styles.thumbnail} />

@@ -25,6 +25,8 @@ import { paymentService } from '../../src/services/payment.service';
 
 import { camPayService } from '../../src/services/campay.service';
 
+type PaymentMethod = 'orange_money' | 'mtn_momo';
+
 export default function PaymentScreen() {
     const colorScheme = useColorScheme();
     const isDark = colorScheme === 'dark';
@@ -34,7 +36,7 @@ export default function PaymentScreen() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [processing, setProcessing] = useState(false);
 
-    const subscriptionPrice = 5000; // 5000 XAF per month
+    const subscriptionPrice = 2500; // 2500 XAF per month
 
     const handlePayment = async () => {
         if (!selectedMethod) {
@@ -70,7 +72,7 @@ export default function PaymentScreen() {
                                 paymentMethod: selectedMethod,
                                 phoneNumber: phoneNumber.trim(),
                             });
-                            router.push('/(tabs)/learning');
+                            router.push('/(tabs)/learning' as any);
                         },
                     },
                 ]

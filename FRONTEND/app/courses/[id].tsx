@@ -58,7 +58,7 @@ export default function CourseDetailScreen() {
             setEnrolling(true);
             await learningService.enrollInCourse(id!);
             Alert.alert('Success', 'Enrolled in course successfully!');
-            router.push('/(tabs)/learning');
+            router.push('/(tabs)/learning' as any);
         } catch (error) {
             console.error('Enrollment failed:', error);
             Alert.alert('Error', 'Failed to enroll in course');

@@ -52,7 +52,7 @@ class CamPayService {
             });
 
             const data = await response.json();
-            return data.token;
+            return data.token as string;
         } catch (error) {
             console.error('Failed to get CamPay token:', error);
             throw new Error('Failed to authenticate with CamPay');
@@ -97,7 +97,7 @@ class CamPayService {
             }
 
             const data = await response.json();
-            return data;
+            return data as CamPayResponse;
         } catch (error) {
             console.error('CamPay payment failed:', error);
             throw error;
