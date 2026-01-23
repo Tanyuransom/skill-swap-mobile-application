@@ -88,7 +88,7 @@ export default function UploadReelScreen() {
                 `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`,
                 {
                     method: 'POST',
-                    body: formData,
+                    body: formData as any,
                     headers: {
                         'Accept': 'application/json',
                     },
